@@ -6,14 +6,11 @@
 static Display_HandleTypeDef hDisplay;
 
 // GPIO Functions
-#define LCD_2IN_Write_Command sendDisplayCommand
-
-
 static void sendDisplayCommand(uint8_t command);
 static void sendDisplayData(uint8_t* pData, uint16_t sizeOfData);
 
 
-void LCD_2IN_WriteData_Byte(uint8_t data) {
+void sendDisplayOneByte(uint8_t data) {
 	sendDisplayData(&data, 1);
 }
 
@@ -21,94 +18,94 @@ void LCD_2IN_Init(void)
 {
 	//LCD_2IN_Reset();
 
-	LCD_2IN_Write_Command(0x36);
-	LCD_2IN_WriteData_Byte(0x00);
+	sendDisplayCommand(0x36);
+	sendDisplayOneByte(0x00);
 
-	LCD_2IN_Write_Command(0x3A);
-	LCD_2IN_WriteData_Byte(0x05);
+	sendDisplayCommand(0x3A);
+	sendDisplayOneByte(0x05);
 
-	LCD_2IN_Write_Command(0x21);
+	sendDisplayCommand(0x21);
 
-	LCD_2IN_Write_Command(0x2A);
-	LCD_2IN_WriteData_Byte(0x00);
-	LCD_2IN_WriteData_Byte(0x00);
-	LCD_2IN_WriteData_Byte(0x01);
-	LCD_2IN_WriteData_Byte(0x3F);
+	sendDisplayCommand(0x2A);
+	sendDisplayOneByte(0x00);
+	sendDisplayOneByte(0x00);
+	sendDisplayOneByte(0x01);
+	sendDisplayOneByte(0x3F);
 
-	LCD_2IN_Write_Command(0x2B);
-	LCD_2IN_WriteData_Byte(0x00);
-	LCD_2IN_WriteData_Byte(0x00);
-	LCD_2IN_WriteData_Byte(0x00);
-	LCD_2IN_WriteData_Byte(0xEF);
+	sendDisplayCommand(0x2B);
+	sendDisplayOneByte(0x00);
+	sendDisplayOneByte(0x00);
+	sendDisplayOneByte(0x00);
+	sendDisplayOneByte(0xEF);
 
-	LCD_2IN_Write_Command(0xB2);
-	LCD_2IN_WriteData_Byte(0x0C);
-	LCD_2IN_WriteData_Byte(0x0C);
-	LCD_2IN_WriteData_Byte(0x00);
-	LCD_2IN_WriteData_Byte(0x33);
-	LCD_2IN_WriteData_Byte(0x33);
+	sendDisplayCommand(0xB2);
+	sendDisplayOneByte(0x0C);
+	sendDisplayOneByte(0x0C);
+	sendDisplayOneByte(0x00);
+	sendDisplayOneByte(0x33);
+	sendDisplayOneByte(0x33);
 
-	LCD_2IN_Write_Command(0xB7);
-	LCD_2IN_WriteData_Byte(0x35);
+	sendDisplayCommand(0xB7);
+	sendDisplayOneByte(0x35);
 
-	LCD_2IN_Write_Command(0xBB);
-	LCD_2IN_WriteData_Byte(0x1F);
+	sendDisplayCommand(0xBB);
+	sendDisplayOneByte(0x1F);
 
-	LCD_2IN_Write_Command(0xC0);
-	LCD_2IN_WriteData_Byte(0x2C);
+	sendDisplayCommand(0xC0);
+	sendDisplayOneByte(0x2C);
 
-	LCD_2IN_Write_Command(0xC2);
-	LCD_2IN_WriteData_Byte(0x01);
+	sendDisplayCommand(0xC2);
+	sendDisplayOneByte(0x01);
 
-	LCD_2IN_Write_Command(0xC3);
-	LCD_2IN_WriteData_Byte(0x12);
+	sendDisplayCommand(0xC3);
+	sendDisplayOneByte(0x12);
 
-	LCD_2IN_Write_Command(0xC4);
-	LCD_2IN_WriteData_Byte(0x20);
+	sendDisplayCommand(0xC4);
+	sendDisplayOneByte(0x20);
 
-	LCD_2IN_Write_Command(0xC6);
-	LCD_2IN_WriteData_Byte(0x0F);
+	sendDisplayCommand(0xC6);
+	sendDisplayOneByte(0x0F);
 
-	LCD_2IN_Write_Command(0xD0);
-	LCD_2IN_WriteData_Byte(0xA4);
-	LCD_2IN_WriteData_Byte(0xA1);
+	sendDisplayCommand(0xD0);
+	sendDisplayOneByte(0xA4);
+	sendDisplayOneByte(0xA1);
 
-	LCD_2IN_Write_Command(0xE0);
-	LCD_2IN_WriteData_Byte(0xD0);
-	LCD_2IN_WriteData_Byte(0x08);
-	LCD_2IN_WriteData_Byte(0x11);
-	LCD_2IN_WriteData_Byte(0x08);
-	LCD_2IN_WriteData_Byte(0x0C);
-	LCD_2IN_WriteData_Byte(0x15);
-	LCD_2IN_WriteData_Byte(0x39);
-	LCD_2IN_WriteData_Byte(0x33);
-	LCD_2IN_WriteData_Byte(0x50);
-	LCD_2IN_WriteData_Byte(0x36);
-	LCD_2IN_WriteData_Byte(0x13);
-	LCD_2IN_WriteData_Byte(0x14);
-	LCD_2IN_WriteData_Byte(0x29);
-	LCD_2IN_WriteData_Byte(0x2D);
+	sendDisplayCommand(0xE0);
+	sendDisplayOneByte(0xD0);
+	sendDisplayOneByte(0x08);
+	sendDisplayOneByte(0x11);
+	sendDisplayOneByte(0x08);
+	sendDisplayOneByte(0x0C);
+	sendDisplayOneByte(0x15);
+	sendDisplayOneByte(0x39);
+	sendDisplayOneByte(0x33);
+	sendDisplayOneByte(0x50);
+	sendDisplayOneByte(0x36);
+	sendDisplayOneByte(0x13);
+	sendDisplayOneByte(0x14);
+	sendDisplayOneByte(0x29);
+	sendDisplayOneByte(0x2D);
 
-	LCD_2IN_Write_Command(0xE1);
-	LCD_2IN_WriteData_Byte(0xD0);
-	LCD_2IN_WriteData_Byte(0x08);
-	LCD_2IN_WriteData_Byte(0x10);
-	LCD_2IN_WriteData_Byte(0x08);
-	LCD_2IN_WriteData_Byte(0x06);
-	LCD_2IN_WriteData_Byte(0x06);
-	LCD_2IN_WriteData_Byte(0x39);
-	LCD_2IN_WriteData_Byte(0x44);
-	LCD_2IN_WriteData_Byte(0x51);
-	LCD_2IN_WriteData_Byte(0x0B);
-	LCD_2IN_WriteData_Byte(0x16);
-	LCD_2IN_WriteData_Byte(0x14);
-	LCD_2IN_WriteData_Byte(0x2F);
-	LCD_2IN_WriteData_Byte(0x31);
-	LCD_2IN_Write_Command(0x21);
+	sendDisplayCommand(0xE1);
+	sendDisplayOneByte(0xD0);
+	sendDisplayOneByte(0x08);
+	sendDisplayOneByte(0x10);
+	sendDisplayOneByte(0x08);
+	sendDisplayOneByte(0x06);
+	sendDisplayOneByte(0x06);
+	sendDisplayOneByte(0x39);
+	sendDisplayOneByte(0x44);
+	sendDisplayOneByte(0x51);
+	sendDisplayOneByte(0x0B);
+	sendDisplayOneByte(0x16);
+	sendDisplayOneByte(0x14);
+	sendDisplayOneByte(0x2F);
+	sendDisplayOneByte(0x31);
+	sendDisplayCommand(0x21);
 
-	LCD_2IN_Write_Command(0x11);
+	sendDisplayCommand(0x11);
 
-	LCD_2IN_Write_Command(0x29);
+	sendDisplayCommand(0x29);
 }
 
 void resetDisplay(void) {
