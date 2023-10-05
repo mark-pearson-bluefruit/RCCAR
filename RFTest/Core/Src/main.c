@@ -95,7 +95,6 @@ int main(void)
   MX_SPI3_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  //setupDisplay(&hspi2, DISPLAY_DC_GPIO_Port, DISPLAY_DC_Pin, DISPLAY_RESET_GPIO_Port, DISPLAY_RESET_Pin);
   RF_HandleTypeDef hRF;
   hRF.hspi = &hspi3;
   hRF.portCE = CHIP_ENABLE_GPIO_Port;
@@ -105,27 +104,6 @@ int main(void)
   RFSetup(hRF);
   RXSetup();
 
-
-
-
-
-/*
-
-
-      GPIO_TypeDef *touch_select_port;
-      uint16_t touch_select_pin;
-      GPIO_TypeDef *touch_irq_port;
-      uint16_t touch_irq_pin;
-
-      ili9341_touch_support_t   touch_support=itsNotSupported;
-      ili9341_touch_normalize_t touch_normalize;
-  ili9341_t* myDis = ili9341_new(&hspi2, DISPLAY_RESET_GPIO_Port, DISPLAY_RESET_Pin, DISPLAY_CS_GPIO_Port,
-		  DISPLAY_CS_Pin, DISPLAY_DC_GPIO_Port,
-		  DISPLAY_DC_Pin, isoLeft, touch_select_port, touch_select_pin, touch_irq_port, touch_irq_pin,
-		  touch_support, touch_normalize);
-*/
-  //turnOn();
-  //makeColor();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -135,12 +113,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	//ili9341_color_t colour=0xAAAA;
-	//ili9341_fill_screen(myDis, colour);
 	uint8_t data[32];
-	//readDisplayInfo();
-	//readPixelFormat();
-	//toggleDisplayInversion();
 
 	// Read RF data from controller
 	// Spoof data to RCCar not needed
@@ -162,57 +135,6 @@ int main(void)
 	{
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 	}
-	/*
-	count += RXRecieveStream(data);
-	if (count%1000 == 0)
-	{
-		uint8_t sizeOfData = strlen(data)<32?strlen(data):32;
-		uint8_t buf[40];
-		sprintf(buf, "Num: %lu \r\n", count);
-		HAL_UART_Transmit(&huart2, buf, strlen(buf), 1000);
-		HAL_UART_Transmit(&huart2, data, sizeOfData, 1000);
-	}
-	*/
-	/*if (RXReceive(data))
-	{
-		//HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-
-		//HAL_UART_Transmit(&huart2, data, sizeOfData, 1000);
-
-		count++;
-		if (count%1000 == 0)
-		{
-			uint8_t sizeOfData = strlen(data)<32?strlen(data):32;
-			uint8_t buf[40];
-			sprintf(buf, "Num: %lu \r\n", count);
-			HAL_UART_Transmit(&huart2, buf, strlen(buf), 1000);
-			HAL_UART_Transmit(&huart2, data, sizeOfData, 1000);
-		}
-		//sprintf(buf, "size %lu \r\n", strlen(data));
-
-	}
-	else
-	{
-		//HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-	}
-	*/
-	/*if (isDataAvailable(1))
-	{
-		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-		NRF24_Receive(data);
-		uint8_t sizeOfData = strlen(data)<32?strlen(data):32;
-		HAL_UART_Transmit(&huart2, data, 32, 1000);
-		uint8_t buf[10];
-		sprintf(buf, "size %lu \r\n", strlen(data));
-		HAL_UART_Transmit(&huart2, buf, 10, 1000);
-	}
-	else
-	{
-		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-	}*/
-
-	//HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-	//HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }
