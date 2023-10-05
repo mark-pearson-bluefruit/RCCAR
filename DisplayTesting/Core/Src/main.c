@@ -21,10 +21,21 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+// IMAGE_INPUT
+// RF_INPUT
+// CAMERA_INPUT
+#define IMAGE_INPUT
+
 #include "displayST7789.h"
 #include <stdint.h>
-#include "testImages/mandoRGB565.h"
 #include "string.h"
+#ifdef RF_INPUT
+#include "RFDriver.h"
+#endif
+
+#ifdef IMAGE_INPUT
+#include "testImages/mandoRGB565.h"
+#endif
 //#include "mandoBW1.h"
 //#include "madoBW3InRGB565.h"
 /* USER CODE END Includes */
@@ -119,6 +130,10 @@ int main(void)
   hDisplay.portBL = DIS_BL_GPIO_Port; hDisplay.pinBL = DIS_BL_Pin;
   setupDisplay(hDisplay);
 
+  #ifdef RF_INPUT
+
+  #endif
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -136,9 +151,16 @@ int main(void)
 	// Radio Chip Input
 	// Camera Input ??
 
+	#ifdef IMAGE_INPUT
 	paintDisplayRGB565(mando + 240*i/(8));
 	i++;
 	i = i%30;
+	#endif
+
+    #ifdef RF_INPUT
+
+    #endif
+
 
 	HAL_Delay(20);
 	//paintDisplay(mando);
