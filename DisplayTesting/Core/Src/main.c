@@ -25,7 +25,7 @@
 // IMAGE_INPUT
 // RF_INPUT
 // CAMERA_INPUT
-#define IMAGE_INPUT
+#define RF_INPUT
 
 #include "displayST7789.h"
 #include <stdint.h>
@@ -169,7 +169,8 @@ int main(void)
 	#endif
 
     #ifdef RF_INPUT
-
+	uint8_t data[50];
+	RXReceive(data);
     #endif
 
 
