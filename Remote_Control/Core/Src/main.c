@@ -105,7 +105,13 @@ int main(void)
   uint32_t raw1;
   uint32_t raw2;
   char buf[60];
-  RFSetup(&hspi1, CHIP_ENABLE_GPIO_Port, CHIP_ENABLE_Pin, CSN_GPIO_Port, CSN_Pin);
+  RF_HandleTypeDef hRF;
+  hRF.hspi = &hspi1;
+  hRF.portCE = CHIP_ENABLE_GPIO_Port;
+  hRF.pinCE = CHIP_ENABLE_Pin;
+  hRF.portCSN = CSN_GPIO_Port;
+  hRF.pinCSN = CSN_Pin;
+  RFSetup(hRF);
   //NRF24_Init();
   //uint8_t RXAddress[] = {0xEE,0xEE,0xEE,0xEE,0xEE};
   //NRF24_TxMode(RXAddress, 100);

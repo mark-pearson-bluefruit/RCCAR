@@ -96,7 +96,13 @@ int main(void)
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
   //setupDisplay(&hspi2, DISPLAY_DC_GPIO_Port, DISPLAY_DC_Pin, DISPLAY_RESET_GPIO_Port, DISPLAY_RESET_Pin);
-  RFSetup(&hspi3, CHIP_ENABLE_GPIO_Port, CHIP_ENABLE_Pin, CSN_GPIO_Port, CSN_Pin);
+  RF_HandleTypeDef hRF;
+  hRF.hspi = &hspi3;
+  hRF.portCE = CHIP_ENABLE_GPIO_Port;
+  hRF.pinCE = CHIP_ENABLE_Pin;
+  hRF.portCSN = CSN_GPIO_Port;
+  hRF.pinCSN = CSN_Pin;
+  RFSetup(hRF);
   RXSetup();
 
 
