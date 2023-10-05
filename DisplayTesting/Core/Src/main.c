@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -131,7 +132,16 @@ int main(void)
   setupDisplay(hDisplay);
 
   #ifdef RF_INPUT
-
+  /*
+  RF_HandleTypeDef hRF;
+  hRF.hspi = &hspi3;
+  hRF.portCE = CHIP_ENABLE_GPIO_Port;
+  hRF.pinCE = CHIP_ENABLE_Pin;
+  hRF.portCSN = CSN_GPIO_Port;
+  hRF.pinCSN = CSN_Pin;
+  RFSetup(hRF);
+  RXSetup();
+  */
   #endif
 
   /* USER CODE END 2 */
@@ -377,8 +387,6 @@ static void MX_USB_OTG_FS_PCD_Init(void)
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -440,8 +448,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DIS_DC_GPIO_Port, &GPIO_InitStruct);
 
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
