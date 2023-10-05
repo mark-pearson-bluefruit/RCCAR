@@ -116,7 +116,6 @@ int main(void)
 	uint8_t data[32];
 
 	// Read RF data from controller
-	// Spoof data to RCCar not needed
 	// Spoof image to controller.
 
 	if (RXReceive(data))
