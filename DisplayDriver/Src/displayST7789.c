@@ -1,5 +1,5 @@
+#include <displayNamesST7789.h>
 #include "stm32g4xx_hal.h"
-#include "displayNamesST7789.h"
 #include "displayST7789.h"
 
 
