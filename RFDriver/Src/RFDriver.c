@@ -15,45 +15,36 @@
 
 /** Functions ----------------------------------------------------------------*/
 
-static SPI_HandleTypeDef* hspi;
-static GPIO_TypeDef *GPIO_CE;
-static uint16_t GPIO_Pin_CE;
-static GPIO_TypeDef *GPIO_CSN;
-static uint16_t GPIO_Pin_CSN;
+static RF_HandleTypeDef hRF;
 
 const uint8_t sizeOfPacketData = 32;
 const uint8_t channel = 150;
 const uint8_t sizeOfRXAddress = 5;
 static uint8_t RXAddress[] = {0xEE,0xE7,0xE7,0xE7,0xEE};
 
-#define NRF24_SPI hspi
-
-
 static void nrf24_reset(uint8_t REG);
-
-
 
 // GPIO FUNCTIONS
 
 static void chipSelect(void)
 {
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_RESET);
 }
 
 static void chipUnSelect(void)
 {
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_SET);
 }
 
 
 static void chipEnable(void)
 {
-	HAL_GPIO_WritePin(GPIO_CE, GPIO_Pin_CE, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCE, hRF.pinCE, GPIO_PIN_SET);
 }
 
 static void chipDisable(void)
 {
-	HAL_GPIO_WritePin(GPIO_CE, GPIO_Pin_CE, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCE, hRF.pinCE, GPIO_PIN_RESET);
 }
 
 
@@ -62,29 +53,29 @@ static void chipDisable(void)
 static uint8_t readRegister(uint8_t address)
 {
 	// CSN Low
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_RESET);
 
 	uint8_t data;
 	uint8_t sizeOfData = 1;
-	HAL_SPI_Transmit(hspi, &address, sizeOfData, HAL_MAX_DELAY);
-	HAL_SPI_Receive(hspi, &data, sizeOfData, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, &address, sizeOfData, HAL_MAX_DELAY);
+	HAL_SPI_Receive(hRF.hspi, &data, sizeOfData, HAL_MAX_DELAY);
 
 	// CSN High
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_SET);
 	return data;
 }
 
 static void writeRegister(uint8_t address, uint8_t data)
 {
 	// CSN Low
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_RESET);
 
 	uint8_t command = W_REGISTER | address;
-	HAL_SPI_Transmit(hspi, &command, 1, HAL_MAX_DELAY);
-	HAL_SPI_Transmit(hspi, &data, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, &command, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, &data, 1, HAL_MAX_DELAY);
 
 	// CSN High
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_SET);
 }
 
 
@@ -92,14 +83,14 @@ static void writeRegister(uint8_t address, uint8_t data)
 static void writeRegisterMultipleBytes(uint8_t address, uint8_t* data, uint8_t sizeOfData)
 {
 	// CSN Low
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_RESET);
 
 	uint8_t command = W_REGISTER | address;
-	HAL_SPI_Transmit(hspi, &command, 1, HAL_MAX_DELAY);
-	HAL_SPI_Transmit(hspi, data, sizeOfData, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, &command, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, data, sizeOfData, HAL_MAX_DELAY);
 
 	// CSN High
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_SET);
 }
 
 // Radio Functions
@@ -156,14 +147,9 @@ static uint8_t isDataAvailable(void)
 }
 
 // pass struct at start of RF function
-void RFSetup(SPI_HandleTypeDef* _hspi, GPIO_TypeDef *_GPIO_CE, uint16_t _GPIO_Pin_CE,
-		GPIO_TypeDef *_GPIO_CSN, uint16_t _GPIO_Pin_CSN)
+void RFSetup(RF_HandleTypeDef _hRF)
 {
-	hspi = _hspi;
-	GPIO_CE = _GPIO_CE;
-	GPIO_Pin_CE = _GPIO_Pin_CE;
-	GPIO_CSN = _GPIO_CSN;
-	GPIO_Pin_CSN = _GPIO_Pin_CSN;
+	hRF = _hRF;
 
 	nrf24_reset(0); // Set to default values
 
@@ -207,14 +193,14 @@ static void writeTXPayload(uint8_t* data)
 {
 	// CSN Low
 
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_RESET);
 
 	uint8_t command = W_TX_PAYLOAD;
-	HAL_SPI_Transmit(hspi, &command, 1, HAL_MAX_DELAY);
-	HAL_SPI_Transmit(hspi, data, sizeOfPacketData, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, &command, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, data, sizeOfPacketData, HAL_MAX_DELAY);
 
 	// CSN High
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_SET);
 
 	// Check data has been written?
 }
@@ -265,14 +251,14 @@ void RXSetup(void)
 static void readRXPayload(uint8_t* data)
 {
 	// CSN Low
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_RESET);
 
 	uint8_t command = R_RX_PAYLOAD;
-	HAL_SPI_Transmit(hspi, &command, 1, 100);
-	HAL_SPI_Receive(hspi, data, sizeOfPacketData, 1000);
+	HAL_SPI_Transmit(hRF.hspi, &command, 1, 100);
+	HAL_SPI_Receive(hRF.hspi, data, sizeOfPacketData, 1000);
 
 	// CSN High
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_SET);
 }
 
 uint8_t RXReceive(uint8_t* data)
@@ -339,13 +325,13 @@ void decodeData(uint8_t *data, uint16_t* pot1, uint16_t* pot2)
 static void flushRXPayload(void)
 {
 	// CSN Low
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_RESET);
 
 	uint8_t command = FLUSH_RX;
-	HAL_SPI_Transmit(hspi, &command, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, &command, 1, HAL_MAX_DELAY);
 
 	// CSN High
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_SET);
 }
 */
 
@@ -353,12 +339,12 @@ static void flushRXPayload(void)
 static void flushTXPayload(void)
 {
 	// CSN Low
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_RESET);
 
 	uint8_t command = FLUSH_TX;
-	HAL_SPI_Transmit(hspi, &command, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(hRF.hspi, &command, 1, HAL_MAX_DELAY);
 
 	// CSN High
-	HAL_GPIO_WritePin(GPIO_CSN, GPIO_Pin_CSN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(hRF.portCSN, hRF.pinCSN, GPIO_PIN_SET);
 }
 */
