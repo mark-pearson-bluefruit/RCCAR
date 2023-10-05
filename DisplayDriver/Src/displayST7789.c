@@ -1,7 +1,7 @@
-#include "stm32f4xx_hal.h"
+#include "stm32g4xx_hal.h"
+#include "displayNamesST7789.h"
+#include "displayST7789.h"
 
-#include "display.h"
-#include "displayNames.h"
 
 static Display_HandleTypeDef hDisplay;
 
