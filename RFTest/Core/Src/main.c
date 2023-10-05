@@ -22,9 +22,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "RFDriver.h"
-#include "DisplayDriver.h"
-#include "ili9341.h"
-#include "ili9341_gfx.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -138,6 +135,11 @@ int main(void)
 	//readDisplayInfo();
 	//readPixelFormat();
 	//toggleDisplayInversion();
+
+	// Read RF data from controller
+	// Spoof data to RCCar not needed
+	// Spoof image to controller.
+
 	if (RXReceive(data))
 	{
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);

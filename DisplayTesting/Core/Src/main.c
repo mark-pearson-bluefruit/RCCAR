@@ -22,8 +22,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "display.h"
 #include <mandoRGB565.h>
+
+#include "displayST7789.h"
 //#include "mandoBW1.h"
 //#include "madoBW3InRGB565.h"
 /* USER CODE END Includes */
@@ -131,7 +132,9 @@ int main(void)
 	//invertDisplay();
 
 
-
+	// Image input
+	// Radio Chip Input
+	// Camera Input ??
 
 	paintDisplayRGB565(mando + 240*i/(8));
 	i++;

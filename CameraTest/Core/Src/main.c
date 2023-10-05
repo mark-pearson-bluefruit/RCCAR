@@ -141,6 +141,9 @@ int main(void)
 	  HAL_Delay(1000);
 	  HAL_UART_Transmit(&hlpuart1, buffer, strlen(buffer), HAL_MAX_DELAY);
 	  HAL_UART_Transmit(&hlpuart1, pixelData, sizeOfBuffer, HAL_MAX_DELAY);
+
+	  // Save dithered image to file
+	  // Transmit dithered image over RF
   }
   /* USER CODE END 3 */
 }
