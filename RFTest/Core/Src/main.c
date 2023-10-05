@@ -112,6 +112,7 @@ int main(void)
   #ifdef SEND_IMAGE_RF
   TXSetup();
   #endif
+  HAL_Delay(50);
 
 
   /* USER CODE END 2 */
@@ -146,6 +147,7 @@ int main(void)
     #ifdef SEND_IMAGE_RF
 	memset(data, 4, 32);
 	TXSend(data);
+	HAL_Delay(50);
 	#endif
 
 	// Read RF data from controller
