@@ -136,29 +136,6 @@ static void sendDisplayDataWord(uint16_t word) {
 	sendDisplayData(wordSplit, 2);
 }
 
-static uint8_t receiveDisplayDataByte(void) {
-	uint8_t byteData;
-	HAL_GPIO_WritePin(hDisplay.portDC, hDisplay.pinDC, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(hDisplay.portCS, hDisplay.pinCS, GPIO_PIN_RESET);
-	HAL_SPI_Receive(hDisplay.hspi, &byteData, 1, HAL_MAX_DELAY);
-	HAL_GPIO_WritePin(hDisplay.portCS, hDisplay.pinCS, GPIO_PIN_SET);
-	return byteData;
-}
-
-static void receiveDisplayData(uint8_t* pData, uint16_t sizeOfData) {
-	HAL_GPIO_WritePin(hDisplay.portDC, hDisplay.pinDC, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(hDisplay.portCS, hDisplay.pinCS, GPIO_PIN_RESET);
-	HAL_SPI_Receive(hDisplay.hspi, pData, sizeOfData, HAL_MAX_DELAY);
-	HAL_GPIO_WritePin(hDisplay.portCS, hDisplay.pinCS, GPIO_PIN_SET);
-}
-
-static uint16_t receiveDisplayDataWord(void) {
-	uint8_t wordSplit[2];
-	receiveDisplayData(wordSplit, 2);
-	uint16_t word = (wordSplit[0] << 8) + wordSplit[1];
-	return word;
-}
-
 void setupDisplay(Display_HandleTypeDef _hDisplay) {
 	hDisplay = _hDisplay;
 	resetDisplay();
@@ -202,12 +179,6 @@ void paintPixel(uint16_t x, uint16_t y, uint16_t colour) {
 	sendDisplayData(pixelColor, 2);
 }
 
-uint16_t getScanLine(void) {
-	sendDisplayCommand(GSCAN);
-	(void) receiveDisplayDataByte();
-	return receiveDisplayDataWord();
-}
-
 void paintDisplayRGB565(uint8_t* image) {
 	const uint16_t bytesPerPixelRGB565 = 2;
 	setWindow(0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT);
@@ -234,7 +205,7 @@ void paintDisplayBW1(uint8_t* image) {
 }
 
 void invertDisplay(void) {
-	static toggle = 0;
+	static int toggle = 0;
 	if (toggle == 0) {
 		sendDisplayCommand(INVON);
 		toggle = 1;
