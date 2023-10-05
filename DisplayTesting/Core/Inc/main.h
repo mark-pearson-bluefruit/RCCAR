@@ -67,6 +67,10 @@ void Error_Handler(void);
 #define RMII_REF_CLK_GPIO_Port GPIOA
 #define RMII_MDIO_Pin GPIO_PIN_2
 #define RMII_MDIO_GPIO_Port GPIOA
+#define RF_SCK_Pin GPIO_PIN_5
+#define RF_SCK_GPIO_Port GPIOA
+#define RF_MISO_Pin GPIO_PIN_6
+#define RF_MISO_GPIO_Port GPIOA
 #define RMII_CRS_DV_Pin GPIO_PIN_7
 #define RMII_CRS_DV_GPIO_Port GPIOA
 #define RMII_RXD0_Pin GPIO_PIN_4
@@ -89,6 +93,8 @@ void Error_Handler(void);
 #define USB_PowerSwitchOn_GPIO_Port GPIOG
 #define USB_OverCurrent_Pin GPIO_PIN_7
 #define USB_OverCurrent_GPIO_Port GPIOG
+#define RF_CSN_Pin GPIO_PIN_7
+#define RF_CSN_GPIO_Port GPIOC
 #define DIS_BL_Pin GPIO_PIN_8
 #define DIS_BL_GPIO_Port GPIOC
 #define DIS_RST_Pin GPIO_PIN_9
@@ -107,6 +113,8 @@ void Error_Handler(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+#define RF_CHIP_ENABLE_Pin GPIO_PIN_15
+#define RF_CHIP_ENABLE_GPIO_Port GPIOA
 #define DIS_SCK_Pin GPIO_PIN_10
 #define DIS_SCK_GPIO_Port GPIOC
 #define DIS_MOSI_Pin GPIO_PIN_12
@@ -117,6 +125,8 @@ void Error_Handler(void);
 #define RMII_TX_EN_GPIO_Port GPIOG
 #define RMII_TXD0_Pin GPIO_PIN_13
 #define RMII_TXD0_GPIO_Port GPIOG
+#define RF_MOSI_Pin GPIO_PIN_5
+#define RF_MOSI_GPIO_Port GPIOB
 #define LD2_Pin GPIO_PIN_7
 #define LD2_GPIO_Port GPIOB
 
