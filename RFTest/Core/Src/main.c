@@ -21,6 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+// READ_RF
+// SEND_IMAGE_RF
+#define SEND_IMAGE_RF
 #include "RFDriver.h"
 /* USER CODE END Includes */
 
@@ -102,7 +105,14 @@ int main(void)
   hRF.portCSN = CSN_GPIO_Port;
   hRF.pinCSN = CSN_Pin;
   RFSetup(hRF);
+
+  #ifdef READ_RF
   RXSetup();
+  #endif
+  #ifdef SEND_IMAGE_RF
+  TXSetup();
+  #endif
+
 
   /* USER CODE END 2 */
 
@@ -114,10 +124,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	uint8_t data[32];
-
-	// Read RF data from controller
-	// Spoof image to controller.
-
+	#ifdef READ_RF
 	if (RXReceive(data))
 	{
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
@@ -134,6 +141,16 @@ int main(void)
 	{
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 	}
+	#endif
+
+    #ifdef SEND_IMAGE_RF
+	memset(data, 4, 32);
+	TXSend(data);
+	#endif
+
+	// Read RF data from controller
+	// Spoof image to controller.
+
   }
   /* USER CODE END 3 */
 }
