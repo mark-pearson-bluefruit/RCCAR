@@ -23,7 +23,11 @@
 /* USER CODE BEGIN Includes */
 // READ_RF
 // SEND_IMAGE_RF
-#define READ_RF
+#define SEND_IMAGE_RF
+#ifdef SEND_IMAGE_RF
+#include "displayST7789.h"
+#include "testImages/mandoBW1.h"
+#endif
 #include "RFDriver.h"
 /* USER CODE END Includes */
 
@@ -142,9 +146,11 @@ int main(void)
 	#endif
 
     #ifdef SEND_IMAGE_RF
-	memset(data, 4, 32);
-	TXSend(data);
-	HAL_Delay(100);
+	for (uint16_t lineNumber = 0; lineNumber < DISPLAY_HEIGHT; lineNumber++)
+	{
+		encodeImage(data, lineNumber, mando);
+		TXSend(data);
+	}
 	#endif
 
 	// Read RF data from controller
