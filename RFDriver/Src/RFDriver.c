@@ -325,7 +325,7 @@ void encodeImage(uint8_t* data, uint16_t lineID, uint8_t* lineData)
 	data[1] = lineID_1;
 }
 
-decodeImage(uint8_t* data, uint16_t* lineID, uint8_t* lineData)
+void decodeImage(uint8_t* data, uint16_t* lineID, uint8_t* lineData)
 {
 	*lineID = data[0] | (data[1] << 8);
 	lineData = data + 2;

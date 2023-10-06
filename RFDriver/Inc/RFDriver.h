@@ -9,6 +9,9 @@ uint32_t RXRecieveStream(uint8_t* data);
 void encodeData(uint8_t *data, uint16_t pot1, uint16_t pot2);
 void decodeData(uint8_t *data, uint16_t* pot1, uint16_t* pot2);
 
+void encodeImage(uint8_t* data, uint16_t lineID, uint8_t* lineData);
+void decodeImage(uint8_t* data, uint16_t* lineID, uint8_t* lineData);
+
 struct RF_HandleTypeDef {
 	SPI_HandleTypeDef* hspi;
 	GPIO_TypeDef* portCE; uint16_t pinCE;
