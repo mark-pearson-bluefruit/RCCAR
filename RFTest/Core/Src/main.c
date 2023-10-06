@@ -148,9 +148,11 @@ int main(void)
     #ifdef SEND_IMAGE_RF
 	for (uint16_t lineNumber = 0; lineNumber < DISPLAY_HEIGHT; lineNumber++)
 	{
-		encodeImage(data, lineNumber, mando);
+		encodeImage(data, lineNumber, mando + 30*lineNumber);
 		TXSend(data);
+		HAL_Delay(1);
 	}
+	HAL_Delay(10);
 	#endif
 
 	// Read RF data from controller

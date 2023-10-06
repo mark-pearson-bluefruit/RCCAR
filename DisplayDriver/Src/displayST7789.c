@@ -188,6 +188,20 @@ void paintDisplayRGB565(uint8_t* image) {
 	}
 }
 
+void paintLineBW1(uint16_t lineID, uint8_t* lineData)
+{
+	const uint16_t bytesPerPixelRGB565 = 2;
+	setWindow(0, DISPLAY_WIDTH, lineID, lineID);
+	sendDisplayCommand(RAMWR);
+	uint8_t rowData[bytesPerPixelRGB565*DISPLAY_WIDTH];
+	// Fill data BLACK 0x0000, WHITE 0xFFFF
+	for (uint16_t x = 0; x < DISPLAY_WIDTH; x++) {
+		rowData[2*x] = 0xFF * ((lineData[x/8] >> (7 - x%8)) & 0x01);
+		rowData[2*x + 1] = 0xFF * ((lineData[x/8] >> (7 - x%8)) & 0x01);
+	}
+	sendDisplayData(rowData, bytesPerPixelRGB565*DISPLAY_WIDTH);
+}
+
 void paintDisplayBW1(uint8_t* image) {
 	const uint16_t bytesPerPixelRGB565 = 2;
 	setWindow(0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT);

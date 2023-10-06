@@ -21,3 +21,4 @@ void setupDisplay(Display_HandleTypeDef _hDisplay);
 void invertDisplay(void);
 void paintDisplayRGB565(uint8_t* image);
 void paintDisplayBW1(uint8_t* image);
+void paintLineBW1(uint16_t lineID, uint8_t* lineData);

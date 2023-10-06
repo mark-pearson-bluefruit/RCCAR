@@ -320,7 +320,7 @@ void encodeImage(uint8_t* data, uint16_t lineID, uint8_t* lineData)
 {
 	uint8_t lineID_0 = lineID & 0x00FF;
 	uint8_t lineID_1 = lineID >> 8;
-	memcpy(lineData, data + 2, sizeOfPacketData - 2);
+	memcpy(data + 2, lineData, sizeOfPacketData - 2);
 	data[0] = lineID_0;
 	data[1] = lineID_1;
 }
@@ -328,7 +328,8 @@ void encodeImage(uint8_t* data, uint16_t lineID, uint8_t* lineData)
 void decodeImage(uint8_t* data, uint16_t* lineID, uint8_t* lineData)
 {
 	*lineID = data[0] | (data[1] << 8);
-	lineData = data + 2;
+	memcpy(lineData, data + 2, sizeOfPacketData - 2);
+	//lineData = data + 2;
 }
 
 
