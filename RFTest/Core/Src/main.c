@@ -48,6 +48,8 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi3;
 
+TIM_HandleTypeDef htim1;
+
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -59,13 +61,18 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_SPI3_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void delay(uint16_t microSeconds)
+{
+	__HAL_TIM_SET_COUNTER(&htim1, 0);
+	while(__HAL_TIM_GET_COUNTER(&htim1) < microSeconds);
+}
 /* USER CODE END 0 */
 
 /**
@@ -98,6 +105,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_SPI3_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   RF_HandleTypeDef hRF;
   hRF.hspi = &hspi3;
@@ -112,8 +120,11 @@ int main(void)
   #endif
   #ifdef SEND_IMAGE_RF
   TXSetup();
+  int loopCount = 0;
   #endif
   HAL_Delay(50);
+
+  HAL_TIM_Base_Start(&htim1);
 
 
   /* USER CODE END 2 */
@@ -146,13 +157,18 @@ int main(void)
 	#endif
 
     #ifdef SEND_IMAGE_RF
-	for (uint16_t lineNumber = 0; lineNumber < DISPLAY_HEIGHT; lineNumber++)
+	for (uint16_t lineNumber = 0; lineNumber < DISPLAY_HEIGHT; lineNumber+=2)
 	{
-		encodeImage(data, lineNumber, mando + 30*lineNumber);
+		encodeImage(data, lineNumber, mando + 30*lineNumber + loopCount);
 		TXSend(data);
-		HAL_Delay(1);
+		encodeImage(data, lineNumber+1, mando + 30*(lineNumber+1) + loopCount);
+		TXSend(data);
+		//HAL_Delay(1);
+		delay(999);
 	}
-	HAL_Delay(10);
+	//HAL_Delay(30);
+	loopCount++;
+	loopCount = loopCount%30;
 	#endif
 
 	// Read RF data from controller
@@ -243,6 +259,52 @@ static void MX_SPI3_Init(void)
   /* USER CODE BEGIN SPI3_Init 2 */
 
   /* USER CODE END SPI3_Init 2 */
+
+}
+
+/**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 84-1;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 0xffff-1;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
 
 }
 

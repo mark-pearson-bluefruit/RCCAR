@@ -191,7 +191,7 @@ void paintDisplayRGB565(uint8_t* image) {
 void paintLineBW1(uint16_t lineID, uint8_t* lineData)
 {
 	const uint16_t bytesPerPixelRGB565 = 2;
-	setWindow(0, DISPLAY_WIDTH, lineID, lineID);
+	setWindow(0, DISPLAY_WIDTH-1, lineID, lineID);
 	sendDisplayCommand(RAMWR);
 	uint8_t rowData[bytesPerPixelRGB565*DISPLAY_WIDTH];
 	// Fill data BLACK 0x0000, WHITE 0xFFFF
