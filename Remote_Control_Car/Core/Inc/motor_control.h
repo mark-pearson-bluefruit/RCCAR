@@ -10,7 +10,14 @@
 #include <stdint.h>
 #include "stm32g4xx_hal.h"
 
-void setupMotorControl(TIM_HandleTypeDef* htim);
-void wheelThrottle(int8_t throttle);
+void wheelThrottle(const int8_t throttle);
+
+struct MC_HandleTypeDef {
+	TIM_HandleTypeDef* htim;
+	uint32_t channel;
+	GPIO_TypeDef* port; uint16_t pin;
+} typedef MC_HandleTypeDef;
+
+void setupMotorControl(const MC_HandleTypeDef _hforward, const MC_HandleTypeDef _hbackward);
 
 #endif /* INC_MOTOR_CONTROL_H_ */

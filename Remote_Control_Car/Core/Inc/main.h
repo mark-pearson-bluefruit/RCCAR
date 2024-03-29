@@ -49,6 +49,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -61,16 +63,26 @@ void Error_Handler(void);
 #define USART2_TX_GPIO_Port GPIOA
 #define USART2_RX_Pin GPIO_PIN_3
 #define USART2_RX_GPIO_Port GPIOA
+#define PWM_SERVO_Pin GPIO_PIN_4
+#define PWM_SERVO_GPIO_Port GPIOA
+#define PWM_FORWARD_Pin GPIO_PIN_9
+#define PWM_FORWARD_GPIO_Port GPIOA
+#define ENABLE_FORWARD_Pin GPIO_PIN_10
+#define ENABLE_FORWARD_GPIO_Port GPIOA
 #define T_SWDIO_Pin GPIO_PIN_13
 #define T_SWDIO_GPIO_Port GPIOA
 #define T_SWCLK_Pin GPIO_PIN_14
 #define T_SWCLK_GPIO_Port GPIOA
+#define ENABLE_BACKWARD_Pin GPIO_PIN_15
+#define ENABLE_BACKWARD_GPIO_Port GPIOA
 #define T_SWO_Pin GPIO_PIN_3
 #define T_SWO_GPIO_Port GPIOB
 #define CHIP_ENABLE_Pin GPIO_PIN_5
 #define CHIP_ENABLE_GPIO_Port GPIOB
 #define CSN_Pin GPIO_PIN_6
 #define CSN_GPIO_Port GPIOB
+#define PWM_BACKWARD_Pin GPIO_PIN_7
+#define PWM_BACKWARD_GPIO_Port GPIOB
 #define LD2_Pin GPIO_PIN_8
 #define LD2_GPIO_Port GPIOB
 
