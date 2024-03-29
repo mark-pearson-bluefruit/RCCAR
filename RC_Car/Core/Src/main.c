@@ -22,8 +22,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include "motor_control.h"
+#include "RFDriver.h"
+#include "process_raw_data.h"
 
 /* USER CODE END Includes */
 
@@ -34,6 +37,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define MAX_UINT_12 (4095)
+
+#define RAW_STRAIGHT_VALUE ((MAX_UINT_12 + 1)/2)
+#define RAW_STOP_VALUE ((MAX_UINT_12 + 1)/2)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -115,21 +122,43 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char buf[12];
-  uint32_t raw;
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   setupMotorControl(&htim3);
-  //HAL_GPIO_WritePin(TransistorTest_GPIO_Port, TransistorTest_Pin, GPIO_PIN_SET);
+
+  RF_HandleTypeDef hRF;
+  hRF.hspi = &hspi1;
+  hRF.portCE = CHIP_ENABLE_GPIO_Port;
+  hRF.pinCE = CHIP_ENABLE_Pin;
+  hRF.portCSN = CSN_GPIO_Port;
+  hRF.pinCSN = CSN_Pin;
+  RFSetup(hRF);
+  HAL_Delay(100);
+  RXSetup();
+
   while (1)
   {
-	// Get ADC value
-	HAL_ADC_Start(&hadc1);
-	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	raw = HAL_ADC_GetValue(&hadc1); // between 0 and 4095
-	int8_t throttle = (int8_t)((200*raw)/4095 - 100);
-	sprintf(buf, "%lu, %d,  \r\n", raw, throttle);
-	wheelThrottle(throttle);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 1000 + (1000*raw)/4096);
 
+	//retrieve data
+	const uint8_t rx_buffer_count = 32;
+	uint8_t rx_buffer[rx_buffer_count];
+
+	uint16_t raw_steering = RAW_STRAIGHT_VALUE;
+	uint16_t raw_throttle = RAW_STOP_VALUE;
+	if (RXReceive(rx_buffer)) {
+		decodeData(rx_buffer, &raw_steering, &raw_throttle);
+	}
+
+
+	// throttle control
+
+	const int8_t throttle = processRawThrottle(raw_throttle);
+	wheelThrottle(throttle);
+
+	// Steering Control
+	const uint32_t steering = 1000 + (1000*raw_steering)/4096;
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, steering);
+
+	sprintf(buf, "%lu, %d,  \r\n", steering, throttle);
 	HAL_UART_Transmit(&hlpuart1, buf, strlen((char*)buf), HAL_MAX_DELAY);
 	HAL_Delay(20);
     /* USER CODE END WHILE */
