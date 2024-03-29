@@ -112,12 +112,9 @@ int main(void)
   hRF.portCSN = CSN_GPIO_Port;
   hRF.pinCSN = CSN_Pin;
   RFSetup(hRF);
-  //NRF24_Init();
-  //uint8_t RXAddress[] = {0xEE,0xEE,0xEE,0xEE,0xEE};
-  //NRF24_TxMode(RXAddress, 100);
   HAL_Delay(100);
-
   TXSetup();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,13 +125,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-	count++;
-	if (count%1000 == 0)
-	{
-		sprintf(buf, "Num: %lu \r\n", count);
-		HAL_UART_Transmit(&huart2, buf, strlen(buf), 1000);
-	}
 
 	// Get ADC value
 	HAL_ADC_Start(&hadc1);
